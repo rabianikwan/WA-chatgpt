@@ -25,4 +25,8 @@ baris ke 78 :
 ```
 const apaMentionBot = pengirimWhatsApp.includes("@"); //isi dgn no hp BOT
 ```
+jalankan project dengan node js di folder utama
+```
+npm run start
+```
 sudah selesai, gampang kan?
