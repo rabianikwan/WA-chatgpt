@@ -29,4 +29,14 @@ jalankan project dengan node js di folder utama
 ```
 npm run start
 ```
-sudah selesai, gampang kan?
+sudah selesai, gampang kan? jika pengen bot berjalan 24 jam, begini caranya :
+```
+npm install pm2 -g
+pm2 --name wabot start npm -- start
+```
+jika ingin mengecek & menghapus background proses begini caranya :
+```
+pm2 ps
+pm2 delete 0
+pm2 logs
+```
