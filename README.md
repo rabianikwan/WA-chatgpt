@@ -2,7 +2,7 @@
 
 Jika anda ingin membuat bot wa dengan base chat GPT download project ini atau dengan CLI :
 ```
-https://github.com/rabianikwan/WA-chatgpt.git
+git clone
 ```
 kemudian, jika belum memiliki node js: <a href = "https://github.com/nvm-sh/nvm/blob/master/README.md"> cara install disini</a>, jika sudah punya install library ini :
 
