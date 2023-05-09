@@ -10,12 +10,15 @@ const {
   MessageOptions,
   Mimetype,
 } = require("@adiwajshing/baileys");
+const fs = require("fs");
+const profs = require("fs").promises;
+const ytdl = require("ytdl-core");
 const { writeFile } = require("fs/promises");
 const { downloadContentFromMessage } = require("@adiwajshing/baileys");
 const { state, saveState } = useSingleFileAuthState("./login.json");
 const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
-  apiKey: "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", //isi dengan APIkey
+  apiKey: "", //isi dengan APIkey
 });
 const openai = new OpenAIApi(configuration);
 
@@ -23,8 +26,8 @@ const openai = new OpenAIApi(configuration);
 async function chatResponse(message) {
   const response = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt: message,
-    temperature: 0.3,
+    prompt: `anda asisten profesional bernama abby ${message}`,
+    temperature: 0.4,
     max_tokens: 3000,
     top_p: 0.7,
     frequency_penalty: 0.8,
@@ -78,7 +81,10 @@ async function hubungkanKeWhatsApp() {
     const messageFormat = Object.keys(m.message)[0]; // get what type of message it is -- text, image, video
     if (!m.message) return;
     console.log("Format pesan: ", messageFormat); //audioMessage
-    if (messageFormat === "conversation" && !messages[0].key.fromMe) {
+    if (
+      messageFormat === "conversation" ||
+      (messageFormat === "extendedTextMessage" && !messages[0].key.fromMe)
+    ) {
       try {
         //keep no. phone & message & log to console
         const pengirimWhatsApp = messages[0].key.remoteJid;
@@ -100,21 +106,62 @@ async function hubungkanKeWhatsApp() {
         console.log("Pesan dari grup?", apaPsnDariGrup);
 
         //OPEN AI integration
-        if (!apaPsnDariGrup && !pesanMasuk.includes("gambar")) {
+        if (
+          pesanMasuk.includes("hapus chat") ||
+          pesanMasuk.includes("clear chat")
+        ) {
+          await profs.writeFile(`${pengirimWhatsApp}.txt`, "", "utf-8");
+          await sock.sendMessage(
+            pengirimWhatsApp,
+            { text: "history chat sudah dihapus" },
+            { quoted: messages[0] },
+            5000
+          );
+        } else if (
+          (!apaPsnDariGrup && pesanMasuk.includes("youtube.com")) ||
+          pesanMasuk.includes("youtu.be")
+        ) {
+          const video = ytdl(pesanMasuk, { quality: 18 });
+          video.on("progress", function (info) {
+            console.log("Download progress");
+          });
+          video.on("end", function (info) {
+            console.log("Download finish");
+          });
+          video.pipe(fs.createWriteStream("video.mp4"));
+          await sock.sendMessage(pengirimWhatsApp, {
+            video: fs.readFileSync("video.mp4"),
+            caption: "Selesai ^^",
+          });
+        } else if (!pesanMasuk.includes("gambar")) {
+          let pesan = await profs.appendFile(
+            `${pengirimWhatsApp}.txt`,
+            `Aku:${pesanMasuk}->Abby:`,
+            "utf-8"
+          );
+          pesan = await profs.readFile(`${pengirimWhatsApp}.txt`, "utf-8");
           async function chatGPT() {
-            let result = await chatResponse(pesanMasuk);
+            let result = await chatResponse(pesan);
             result = result.trim();
             console.log(result);
             await sock.sendMessage(
               pengirimWhatsApp,
               { text: result },
-              { quoted: messages[0] },
-              2000
+              { quoted: messages[0] }
+            );
+            await profs.appendFile(
+              `${pengirimWhatsApp}.txt`,
+              `${result}\n`,
+              "utf-8"
             );
           }
           chatGPT();
         }
-        if (pesanMasuk.includes("gambar")) {
+        if (
+          pesanMasuk.includes("gambar") &&
+          !pesanMasuk.includes("t-rex") &&
+          !pesanMasuk.includes("kim jong un")
+        ) {
           async function imageGPT() {
             let result = await bikinGambar(pesanMasuk);
             await sock.sendMessage(pengirimWhatsApp, {
@@ -127,16 +174,14 @@ async function hubungkanKeWhatsApp() {
         console.log("Pesan Error:", error);
       }
     } else if (messageFormat === "audioMessage") {
-      const stream = await downloadContentFromMessage(
-        m.message.audioMessage,
-        "audio"
+      const pengirimWhatsApp = messages[0].key.remoteJid;
+      await sock.sendMessage(
+        pengirimWhatsApp,
+        {
+          text: "Maaf, saya belum diajarkan mengenali suara nanti saya bakal belajar kok",
+        },
+        { quoted: messages[0] }
       );
-      let buffer = Buffer.from([]);
-      for await (const chunk of stream) {
-        buffer = Buffer.concat([buffer, chunk]);
-      }
-      // save to file
-      await writeFile("./speech.wav", buffer);
     }
   });
 }
