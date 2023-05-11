@@ -32,7 +32,7 @@ npm run start
 sudah selesai, gampang kan? jika pengen bot berjalan 24 jam, begini caranya :
 ```
 npm install pm2 -g
-pm2 --name wabot start npm -- start
+pm2 start whatsapp.js --name "whatsapp"
 ```
 jika ingin mengecek & menghapus background proses begini caranya :
 ```
@@ -40,3 +40,13 @@ pm2 ps
 pm2 delete 0
 pm2 logs
 ```
+Fitur Baru :
+- Continous chat  : bot sudah bisa diajak ngobrol nyambung dengan chat sebelumnya, gunakan 'clear chat' atau 'hapus chat' buat memulai chat baru
+- Image Finder    : bot sudah bisa ngirim gambar
+- Video Downloader : masukan link youtube bot akan mendownload videonya.
+Fitur yang akan datang
+- Audio Recognition (integrasi dgn python)
+- Image Editing
+- Tiktok Video Downloader
+Major Bugs :
+- token limit, belum ada fitur untuk clear history chat apabila melebihi limit
