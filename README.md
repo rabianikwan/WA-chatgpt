@@ -44,9 +44,11 @@ Fitur Baru :
 - Continous chat  : bot sudah bisa diajak ngobrol nyambung dengan chat sebelumnya, gunakan 'clear chat' atau 'hapus chat' buat memulai chat baru
 - Image Finder    : bot sudah bisa ngirim gambar
 - Video Downloader : masukan link youtube bot akan mendownload videonya.
+
 Fitur yang akan datang
 - Audio Recognition (integrasi dgn python)
 - Image Editing
 - Tiktok Video Downloader
+
 Major Bugs :
 - token limit, belum ada fitur untuk clear history chat apabila melebihi limit
