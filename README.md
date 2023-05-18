@@ -1,54 +1,52 @@
 # Whatsapp Bot CHAT-GPT
 
-Jika anda ingin membuat bot wa dengan base chat GPT download project ini atau dengan CLI :
+If you want to create a WhatsApp bot with GPT base, download this project or with CLI :
 ```
 git clone
 ```
-kemudian, jika belum memiliki node js: <a href = "https://github.com/nvm-sh/nvm/blob/master/README.md"> cara install disini</a>, jika sudah punya install library ini :
+If you don’t have node.js: <a href = "https://github.com/nvm-sh/nvm/blob/master/README.md"> install here</a>, and if you already have install this library :
 
 ```
 npm i @adiwajshing/baileys@4.4.0
 npm i qrcode-terminal@0.12.0
 npm i @hapi/boom
-npm i openai
+npm I openai
 ```
-buat <a href='https://platform.openai.com/account/api-keys'>openAI APIkey jika belum punya</a>.
+Make <a href='https://platform.openai.com/account/api-keys'>openAI APIkey</a>.
 
-## edit bagian - bagian ini dalam main js
-baris ke 11 :
+## Edit this line in app.js
+line 11 :
 ```
 const configuration = new Configuration({
-  apiKey: "", //isi dengan APIkey milik kalian
+  apiKey: "", //fill with your APIkey
 });
 ```
-baris ke 78 :
+Line 78 :
 ```
-const apaMentionBot = pengirimWhatsApp.includes("@"); //isi dgn no hp BOT
+const apaMentionBot = pengirimWhatsApp.includes("@"); //Fill with bot phone number
 ```
-jalankan project dengan node js di folder utama
+Run your project with
 ```
 npm run start
 ```
-sudah selesai, gampang kan? jika pengen bot berjalan 24 jam, begini caranya :
+It’s done easy, right? Want app to run 24/7? do these steps :
 ```
 npm install pm2 -g
 pm2 start whatsapp.js --name "whatsapp"
 ```
-jika ingin mengecek & menghapus background proses begini caranya :
+Run this to check the physical memory used or delete the background process.
 ```
 pm2 ps
 pm2 delete 0
 pm2 logs
 ```
-Fitur Baru :
-- Continous chat  : bot sudah bisa diajak ngobrol nyambung dengan chat sebelumnya, gunakan 'clear chat' atau 'hapus chat' buat memulai chat baru
-- Image Finder    : bot sudah bisa ngirim gambar
-- Video Downloader : masukan link youtube bot akan mendownload videonya.
+New Features :
+- Continuous chat 
+- Image Finder: text ‘gambar…’, ex ‘gambar kucing’, it’ll send cat pic
+- Video Downloader: put the Youtube link; it’ll automatically download
 
-Fitur yang akan datang
-- Audio Recognition (integrasi dgn python)
+Next Features :
+- Audio Recognition
 - Image Editing
 - Tiktok Video Downloader
 
-Major Bugs :
-- token limit, belum ada fitur untuk clear history chat apabila melebihi limit
